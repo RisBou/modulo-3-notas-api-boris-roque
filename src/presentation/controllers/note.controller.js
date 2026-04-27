@@ -28,23 +28,28 @@ export default class NoteController {
   updateNote = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
+    const currentUserId = req.user.id;
     if (req.file) data.imageUrl = "/uploads/" + req.file.filename;
 
     try {
-      const note = await this.noteService.updateNote(id, data);
+      const note = await this.noteService.updateNote(id, data, currentUserId);
       res.status(200).json(note);
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      const status = error.message.includes("Unauthorized") ? 403 : 404;
+      res.status(status).json({ error: error.message });
     }
   };
 
   deleteNote = async (req, res) => {
     const { id } = req.params;
+    const currentUserId = req.user.id;
+
     try {
-      const result = await this.noteService.deleteNote(id);
+      const result = await this.noteService.deleteNote(id, currentUserId);
       res.status(200).json(result);
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      const status = error.message.includes("Unauthorized") ? 403 : 404;
+      res.status(status).json({ error: error.message });
     }
   };
 
