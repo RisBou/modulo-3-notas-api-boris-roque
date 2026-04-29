@@ -1,7 +1,7 @@
 import NoteEntity from "../../domain/entities/note.entity.js";
 
 export default class NoteService {
-  constructor(noteRepository) {
+  constructor(noteRepository, mailService) {
     this.noteRepository = noteRepository;
     this.mailService = mailService;
   }
